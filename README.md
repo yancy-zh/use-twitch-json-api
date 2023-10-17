@@ -13,6 +13,10 @@
    ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"]
   ```
 
+## References
+
+- [Json Place holder](https://jsonplaceholder.typicode.com/todos)
+
 ## commands
 
 ```
