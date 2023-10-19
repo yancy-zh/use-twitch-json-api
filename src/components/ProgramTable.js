@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Table } from "antd";
 import { useState, useEffect } from "react";
+import UserProfileLogo from "./UserProfileLogo";
 const ProgramTable = () => {
   const users = [
     "ESL_SC2",
@@ -83,6 +84,7 @@ const ProgramTable = () => {
       key: "logo",
       title: "logo",
       dataIndex: "logo",
+      render: (_, { logo }) => <UserProfileLogo url={logo} />,
     },
     {
       key: "status",
