@@ -4,6 +4,11 @@ import { Table } from "antd";
 import { useState, useEffect } from "react";
 import UserProfileLogo from "./UserProfileLogo";
 import StreamingStatus from "./StreamingStatus";
+import FilterTab from "./FilterTab";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import TvIcon from "@mui/icons-material/Tv";
+import TvOffIcon from "@mui/icons-material/TvOff";
+import "./BoardHeader.css";
 const ProgramTable = () => {
   const users = [
     "ESL_SC2",
@@ -16,6 +21,20 @@ const ProgramTable = () => {
     "noobs2ninjas",
   ];
   const [dataSource, setDataSource] = useState([]);
+  const [filteredInfo, setFilteredInfo] = useState({});
+  const handleChange = (pagination, filters, sorter) => {
+    console.log("parameter changed", filters);
+    setFilteredInfo(filters);
+  };
+  const clearFilters = () => {
+    setFilteredInfo({});
+  };
+  const setStatusFilterOnline = () => {
+    setFilteredInfo({ status: ["Online"] });
+  };
+  const setStatusFilterOffline = () => {
+    setFilteredInfo({ status: ["Offline"] });
+  };
   const getChannelForUser = (user) => {
     const baseUrl =
       "https://twitch-proxy.freecodecamp.rocks/twitch-api/channels/";
@@ -29,28 +48,6 @@ const ProgramTable = () => {
     }
     return getJsonResp(apiEndpoint, wikiConfig)
       .then((result) => {
-        console.log(result);
-        return result;
-      })
-      .catch((error) => {
-        console.log("an error occurred: " + error);
-        return null;
-      });
-  };
-  const getStreamForUser = (user) => {
-    const baseUrl =
-      "https://twitch-proxy.freecodecamp.rocks/twitch-api/streams/";
-    const apiEndpoint = baseUrl + user;
-    var wikiConfig = {
-      timeout: 6500,
-    };
-    async function getJsonResp(url, config) {
-      const res = await axios.get(url, config);
-      return res.data;
-    }
-    return getJsonResp(apiEndpoint, wikiConfig)
-      .then((result) => {
-        console.log(result);
         return result;
       })
       .catch((error) => {
@@ -62,7 +59,6 @@ const ProgramTable = () => {
     const result = await Promise.all(
       users.map((user) => getChannelForUser(user))
     );
-    console.log("fetching data for users: " + result);
     return result;
   };
   useEffect(() => {
@@ -100,8 +96,8 @@ const ProgramTable = () => {
         { text: "Offline", value: "Offline" },
       ],
       filterMode: "tree",
+      filteredValue: filteredInfo.status || null,
       onFilter: (value, record) => {
-        console.log(record.status);
         let myStatus = record.status == null ? "Offline" : "Online";
         return myStatus.includes(value);
       },
@@ -123,22 +119,41 @@ const ProgramTable = () => {
       },
     },
   ];
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+  const styles = {
+    divStyle1: { backgroundColor: "red", width: "100px" },
+    divStyle2: { backgroundColor: "#4CAF50", width: "100px" },
+    divStyle3: { backgroundColor: "royalblue", width: "100px" },
   };
   return (
-    <div>
+    <div className="table-wrapper">
+      {/* three buttons for filtering programs */}
+      <div className="filters">
+        <FilterTab
+          title="all"
+          icon={<DoneAllIcon />}
+          style={styles.divStyle1}
+          onClickCallBack={clearFilters}
+        />
+        <FilterTab
+          title="online"
+          icon={<TvIcon />}
+          style={styles.divStyle2}
+          onClickCallBack={setStatusFilterOnline}
+        />
+        <FilterTab
+          title="offline"
+          icon={<TvOffIcon />}
+          style={styles.divStyle3}
+          onClickCallBack={setStatusFilterOffline}
+        />
+      </div>
       <Table
         columns={columns}
         dataSource={dataSource}
         rowClassName={(record, index) =>
           record.status == null ? "red" : "green"
         }
-        style={{
-          fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: "14px",
-        }}
-        onChange={onChange}
+        onChange={handleChange}
       ></Table>
     </div>
   );

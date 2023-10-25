@@ -8,5 +8,11 @@
   background-color: lightcoral;
 }
 .green {
-  background-color: green;
+  background-color: #7bb661;
+}
+.ant-table-content table thead.ant-table-thead .ant-table-cell {
+  background-color: #99ccff;
+}
+.table-wrapper {
+  background-color: #f0f8ff;
 }

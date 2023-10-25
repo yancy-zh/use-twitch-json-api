@@ -1,5 +1,5 @@
 import "./App.css";
-import React, {  } from "react";
+import React from "react";
 import BoardHeader from "./components/BoardHeader";
 import ProgramTable from "./components/ProgramTable";
 function App() {
